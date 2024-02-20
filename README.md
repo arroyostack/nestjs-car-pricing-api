@@ -1,32 +1,53 @@
-![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![NestJS](https://img.shields.io/badge/-NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+# Refactor Summary
 
-## Description
+## Step 1: Install TypeORM
 
-This repository serves as a tutorial for working with Nest.js, focusing on building a used car pricing API.
+TypeORM, a powerful ORM for TypeScript and JavaScript, was installed.
 
-### Application Overview
+## Step 2: Import TypeORM in App Module
 
-This API will help users estimate the value of their cars based on factors like make, model, year, and mileage.
+TypeORM was imported into the app module using the `forRoot()` configuration. This configuration includes the database type, database name, entities, and synchronization settings.
 
-### Project Features
+````typescript
+@Module({
+  imports: [UsersModule, ReportsModule, TypeOrmModule.forRoot({
+    type: 'sqlite',
+    database: 'db.sqlite',
+    entities: [],
+    synchronize: true,
+  })],
+  controllers: [AppController],
+  providers: [AppService],
+})```
 
-1. **User Authentication**: Users can sign up with email and password to access the application.
-2. **Car Valuation**: Once logged in, users can get an estimate of their car's value based on its details.
-3. **Reporting Sales**: Users can report their car sales, providing the actual dollar amount they sold their car for.
-4. **Administrator Approval**: Administrator users review reported sales before adding them to the dataset to prevent abuse.
+Step 3: Create User Entity
+A new entity, User, was created with id, email, and password fields. This entity maps the User object to a database table.
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-### Project Architecture
+@Entity()
+export class User {
+    @PrimaryGeneratedColumn()
+    id: number;
 
-The application's architecture will be designed to handle user authentication, car valuation, reporting sales, and administrator approval. Though the application's flow may seem straightforward, various side features need to be implemented.
+    @Column()
+    email: string;
 
-### Next Steps
+    @Column()
+    password: string;
+}
 
-In the upcoming videos, we'll delve into the high-level architecture of our application and start implementing the necessary features.
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  controllers: [UsersController]
+})
 
-### Tutorial Progress
+Step 4: Import User Entity in User Module
+The User entity was imported into the User module and added to the module's imports.
 
-- We've outlined the features and architecture of our application.
-- Next, we'll investigate high-level architecture in the following video.
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  controllers: [UsersController]
+})
 
-Stay tuned for updates and further progress in the tutorial!
+step 5: import User entity in AppModule.
+````
